@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kuis UUD NRI 1945</title>
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #dbeafe, #e0f2fe);
+    margin: 0;
+    padding: 30px 15px;
+}
+
+.container {
+    max-width: 750px;
+    margin: auto;
+    background: white;
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px #0002;
+}
+
+h1 {
+    text-align: center;
+    color: #174a7e;
+}
+
+.subtitle {
+    text-align: center;
+    color: #555;
+}
+
+.info {
+    display: flex;
+    justify-content: space-between;
+    background: #eaf3ff;
+    padding: 12px;
+    border-radius: 8px;
+    font-weight: bold;
+}
+
+#question {
+    font-size: 19px;
+    font-weight: bold;
+    margin-top: 25px;
+}
+
+.option {
+    display: block;
+    width: 100%;
+    padding: 13px;
+    margin: 10px 0;
+    border: 2px solid #cbd5e1;
+    border-radius: 8px;
+    background: white;
+    text-align: left;
+    cursor: pointer;
+    font-size: 15px;
+}
+
+.option:hover {
+    background: #eaf3ff;
+}
+
+.correct {
+    background: #bbf7d0;
+    border-color: green;
+}
+
+.wrong {
+    background: #fecaca;
+    border-color: red;
+}
+
+button {
+    padding: 12px 20px;
+    background: #2563eb;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+button:disabled {
+    background: #94a3b8;
+    cursor: not-allowed;
+}
+
+#next {
+    display: block;
+    margin: 20px 0 0 auto;
+}
+
+#feedback {
+    margin-top: 15px;
+    padding: 12px;
+    border-radius: 8px;
+    display: none;
+}
+
+#result {
+    display: none;
+    text-align: center;
+}
+
+.score {
+    font-size: 40px;
+    color: #2563eb;
+    font-weight: bold;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>📘 KUIS UUD NRI TAHUN 1945</h1>
+
+<p class="subtitle">
+Pendidikan Pancasila dan Kewarganegaraan<br>
+Latihan Soal untuk Siswa SMP
+</p>
+
+<div id="quiz">
+
+<div class="info">
+    <span id="number">Soal 1</span>
+    <span id="score">Skor: 0</span>
+</div>
+
+<p id="question"></p>
+
+<div id="options"></div>
+
+<div id="feedback"></div>
+
+<button id="next" onclick="nextQuestion()" disabled>
+Soal Berikutnya
+</button>
+
+</div>
+
+<div id="result">
+    <h2>🎉 Kuis Selesai!</h2>
+    <p>Nilai Akhir Kamu:</p>
+    <div class="score" id="finalScore"></div>
+    <p id="message"></p>
+    <button onclick="restartQuiz()">Ulangi Kuis</button>
+</div>
+
+</div>
+
+<script>
+
+// DATA SOAL KUIS
+const questions = [
+
+{
+question: "Apa yang dimaksud dengan UUD NRI Tahun 1945?",
+options: [
+"Hukum dasar tertulis Negara Indonesia",
+"Peraturan pemerintah daerah",
+"Keputusan presiden",
+"Peraturan organisasi masyarakat"
+],
+answer: 0,
+explanation: "UUD NRI Tahun 1945 merupakan hukum dasar tertulis negara Indonesia."
+},
+
+{
+question: "Kapan UUD 1945 disahkan oleh PPKI?",
+options: [
+"1 Juni 1945",
+"17 Agustus 1945",
+"18 Agustus 1945",
+"20 Mei 1908"
+],
+answer: 2,
+explanation: "UUD 1945 disahkan oleh PPKI pada tanggal 18 Agustus 1945."
+},
+
+{
+question: "Lembaga yang mengesahkan UUD 1945 adalah ....",
+options: [
+"BPUPKI",
+"PPKI",
+"DPR",
+"Presiden"
+],
+answer: 1,
+explanation: "PPKI mengesahkan UUD 1945 sehari setelah Proklamasi Kemerdekaan."
+},
+
+{
+question: "Pembukaan UUD NRI Tahun 1945 terdiri atas berapa alinea?",
+options: [
+"Dua alinea",
+"Tiga alinea",
+"Empat alinea",
+"Lima alinea"
+],
+answer: 2,
+explanation: "Pembukaan UUD NRI Tahun 1945 terdiri atas empat alinea."
+},
+
+{
+question: "Pernyataan Indonesia adalah negara hukum terdapat dalam ....",
+options: [
+"Pasal 1 ayat (1)",
+"Pasal 1 ayat (2)",
+"Pasal 1 ayat (3)",
+"Pasal 2 ayat (1)"
+],
+answer: 2,
+explanation: "Pasal 1 ayat (3) menyatakan bahwa Negara Indonesia adalah negara hukum."
+},
+
+{
+question: "Lembaga yang berwenang mengubah dan menetapkan UUD adalah ....",
+options: [
+"Presiden",
+"DPR",
+"MPR",
+"Mahkamah Agung"
+],
+answer: 2,
+explanation: "MPR memiliki kewenangan mengubah dan menetapkan Undang-Undang Dasar."
+},
+
+{
+question: "Berapa kali UUD 1945 mengalami perubahan pada masa Reformasi?",
+options: [
+"Dua kali",
+"Tiga kali",
+"Empat kali",
+"Lima kali"
+],
+answer: 2,
+explanation: "UUD 1945 mengalami empat kali perubahan pada tahun 1999, 2000, 2001, dan 2002."
+},
+
+{
+question: "Tujuan perubahan UUD 1945 pada masa Reformasi adalah ....",
+options: [
+"Memperkuat demokrasi dan membatasi kekuasaan",
+"Menghapus seluruh lembaga negara",
+"Mengganti dasar negara Pancasila",
+"Menghilangkan hak warga negara"
+],
+answer: 0,
+explanation: "Perubahan UUD bertujuan menyempurnakan sistem ketatanegaraan dan memperkuat demokrasi."
+},
+
+{
+question: "Sikap pelajar yang sesuai dengan nilai konstitusi adalah ....",
+options: [
+"Mematuhi tata tertib sekolah",
+"Memaksakan pendapat",
+"Mengabaikan peraturan",
+"Mementingkan diri sendiri"
+],
+answer: 0,
+explanation: "Mematuhi tata tertib merupakan bentuk kesadaran terhadap aturan."
+},
+
+{
+question: "Hubungan Pancasila dengan UUD NRI Tahun 1945 adalah ....",
+options: [
+"Pancasila menjadi dasar negara dan sumber nilai konstitusi",
+"UUD menjadi dasar untuk mengganti Pancasila",
+"Keduanya tidak memiliki hubungan",
+"Pancasila hanya berlaku di lingkungan keluarga"
+],
+answer: 0,
+explanation: "Pancasila merupakan dasar negara dan sumber dari segala sumber hukum negara."
+}
+
+];
+
+// VARIABEL KUIS
+let current = 0;
+let score = 0;
+let answered = false;
+
+// MENAMPILKAN SOAL
+function showQuestion() {
+
+    answered = false;
+
+    let q = questions[current];
+
+    document.getElementById("number").innerText =
+        "Soal " + (current + 1) + " dari " + questions.length;
+
+    document.getElementById("score").innerText =
+        "Skor: " + score;
+
+    document.getElementById("question").innerText =
+        q.question;
+
+    document.getElementById("feedback").style.display = "none";
+
+    let options = document.getElementById("options");
+    options.innerHTML = "";
+
+    q.options.forEach((option, index) => {
+
+        let button = document.createElement("button");
+
+        button.className = "option";
+
+        button.innerText =
+            String.fromCharCode(65 + index) + ". " + option;
+
+        button.onclick = () => checkAnswer(index);
+
+        options.appendChild(button);
+
+    });
+
+    document.getElementById("next").disabled = true;
+
+    document.getElementById("next").innerText =
+        current === questions.length - 1
+        ? "Lihat Hasil"
+        : "Soal Berikutnya";
+}
+
+// MEMERIKSA JAWABAN
+function checkAnswer(selected) {
+
+    if (answered) return;
+
+    answered = true;
+
+    let q = questions[current];
+
+    let buttons = document.querySelectorAll(".option");
+
+    buttons.forEach((button, index) => {
+
+        button.disabled = true;
+
+        if (index === q.answer) {
+            button.classList.add("correct");
+        }
+
+        if (index === selected && selected !== q.answer) {
+            button.classList.add("wrong");
+        }
+
+    });
+
+    let feedback = document.getElementById("feedback");
+
+    if (selected === q.answer) {
+
+        score += 10;
+
+        feedback.style.background = "#dcfce7";
+
+        feedback.innerHTML =
+            "<b>BENAR!</b><br>" + q.explanation;
+
+    } else {
+
+        feedback.style.background = "#fee2e2";
+
+        feedback.innerHTML =
+            "<b>KURANG TEPAT!</b><br>" + q.explanation;
+
+    }
+
+    feedback.style.display = "block";
+
+    document.getElementById("score").innerText =
+        "Skor: " + score;
+
+    document.getElementById("next").disabled = false;
+}
+
+// PINDAH KE SOAL BERIKUTNYA
+function nextQuestion() {
+
+    if (!answered) return;
+
+    current++;
+
+    if (current < questions.length) {
+
+        showQuestion();
+
+    } else {
+
+        showResult();
+
+    }
+
+}
+
+// MENAMPILKAN HASIL AKHIR
+function showResult() {
+
+    document.getElementById("quiz").style.display = "none";
+
+    document.getElementById("result").style.display = "block";
+
+    let nilai = score;
+
+    document.getElementById("finalScore").innerText =
+        nilai;
+
+    let message = "";
+
+    if (nilai >= 90) {
+        message = "Luar biasa! Pemahaman kamu sangat baik.";
+    } else if (nilai >= 70) {
+        message = "Bagus! Terus tingkatkan prestasimu.";
+    } else if (nilai >= 50) {
+        message = "Cukup baik. Ayo belajar lebih giat!";
+    } else {
+        message = "Jangan menyerah! Pelajari kembali materi UUD 1945.";
+    }
+
+    document.getElementById("message").innerText = message;
+
+}
+
+// MENGULANG KUIS
+function restartQuiz() {
+
+    current = 0;
+    score = 0;
+
+    document.getElementById("result").style.display = "none";
+
+    document.getElementById("quiz").style.display = "block";
+
+    showQuestion();
+
+}
+
+// MEMULAI KUIS
+showQuestion();
+
+</script>
+
+</body>
+</html>
